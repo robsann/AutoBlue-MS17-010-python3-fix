@@ -4,3 +4,7 @@ This repo provides suggestions to fix the Python 3 version of the AutoBlue-MS17-
 
 The original repository containing all the exploit files can be accessed at: https://github.com/3ndG4me/AutoBlue-MS17-010
 
+The suggested changes are as follow:
+
+
+
