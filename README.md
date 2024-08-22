@@ -73,7 +73,7 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
 
 ### The suggested changes for `mysmb.py`:
 
-- Substitute:
+- Don't need to import `smbserver`, just remove it:
     ```python
     Original:
     3          from impacket import smb, smbconnection, smbserver
@@ -82,7 +82,7 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
     3          from impacket import smb, smbconnection
     ```
 
-- Remove
+- Don't neet to import `ConfigParser`, just remove it:
     ```python
     Original:
     9          try:
@@ -91,14 +91,14 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
     12             import configparser as ConfigParser
     ```
 
-- Remove:
+- Don't need to define the values below, just remove it:
     ```python
     Original:
     17         SMBSERVER_DIR   = '__tmp'
     18         DUMMY_SHARE     = 'TMP'
     ```
 
-- Substitute:
+- Verify if `data` need to be converted to `bytes`:
     ```python
     Original:
     89         transData += (b'\x00' * padLen) + str.encode(data)
@@ -110,7 +110,7 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
     86             transData += (b'\x00' * padLen) + data.encode('utf-8')
     ```
 
-- Substitute:
+- Substitute `%COMPUTERNAME%` by localhost address `127.0.0.1`:
     ```python
     Original:
     420        self.__output = '\\\\%COMPUTERNAME%\\{}\\{}'.format(self.__share,self.__outputFilename)
@@ -119,7 +119,7 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
     417        self.__output = '\\\\127.0.0.1\\{}\\{}'.format(self.__share,self.__outputFilename)
     ```
 
-- Substitute:
+- Remove `errors='replace'` inside `decode()`:
     ```python
     Original:
     483        self.prompt = self.__outputBuffer.decode(errors='replace').replace('\r\n','') + '>'
@@ -128,7 +128,7 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
     489        self.prompt = self.__outputBuffer.decode().replace('\r\n','') + '>'
     ```
 
-- Substitute:
+- Don't need to convert `fd.read()` to `bytes`:
     ```python
     Original:
     502        output_callback(fd.read().encode('utf-8'))
@@ -137,7 +137,7 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
     499        output_callback(fd.read())
     ```
 
-- Substitute:
+- Remove `errors='replace'` inside `decode()`:
     ```python
     Original:
     528        print(self.__outputBuffer.decode(errors='replace'))
@@ -146,7 +146,7 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
     525        print(self.__outputBuffer.decode())
     ```
 
-- Substitute:
+- Remove third argument in `smbConfig.set()`:
     ```python
     Original:
     566        smbConfig.set('IPC$','path','')
