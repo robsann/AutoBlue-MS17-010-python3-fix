@@ -2,9 +2,9 @@
 
 MS17-010 is a security flaw in Microsoft Windows operating systems that was discovered in March 2017. This vulnerability allows remote attackers to execute arbitrary code on a target system by sending specially crafted packets over the network. The EternalBlue exploit, developed by the U.S. National Security Agency (NSA) and leaked by the hacking group Shadow Brokers in April 2017, takes advantage of the MS17-101 vulnerability, specifically the flaw in the Server Message Block (SMB) protocol, to remotely execute code on a target system, and potentially gaining full control over the system. EternalBlue gained notoriety for its usage in the WannaCry ransomware attack in May 2017, which affected hundreds of thousands of computers worldwide. Microsoft released a patch to fix the vulnerability shortly after it was discovered.
 
-This repo provides suggestions to fix the Python 3 version of the AutoBlue-MS17-010 Exploit Code, which is a tool that automates the EternalBlue exploit, specifically addressing the issue related to the interaction of variables with `bytes` and `str` types in the Python scripts `mysmb.py` and `zzz_exploit.py`.
+This repo provides suggestions to fix the Python 3 version of the AutoBlue-MS17-010 Exploit Code, which is a tool that automates the EternalBlue exploit. The suggestions specifically address the issue related to `str` and `bytes` types in the `mysmb.py` and `zzz_exploit.py` Python scripts.
 
-The original repository containing all the exploit files can be accessed at: https://github.com/3ndG4me/AutoBlue-MS17-010
+The original repository containing all the AutoBlue-MS17-010 exploit files can be accessed at: https://github.com/3ndG4me/AutoBlue-MS17-010
 
 ### The suggested changes for `zzz_exploit.py`:
 
