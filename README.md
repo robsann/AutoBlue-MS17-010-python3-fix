@@ -19,12 +19,11 @@ MS17-010 is a security vulnerability in Microsoft Windows operating systems that
 
 - Substitute:
     ```python
-    324,325c324,325
     Original:
-    324            info['FRAG_POOL_SIZE'] = ord(leakData[ X86_INFO['FRAG_TAG_OFFSET']-2 ]) * X86_INFO['POOL_ALIGN']
+    324        info['FRAG_POOL_SIZE'] = ord(leakData[ X86_INFO['FRAG_TAG_OFFSET']-2 ]) * X86_INFO['POOL_ALIGN']
     ---
     Modified:
-    324            info['FRAG_POOL_SIZE'] = leakData[ X86_INFO['FRAG_TAG_OFFSET']-2 ] * X86_INFO['POOL_ALIGN']
+    324        info['FRAG_POOL_SIZE'] = leakData[ X86_INFO['FRAG_TAG_OFFSET']-2 ] * X86_INFO['POOL_ALIGN']
     ```
 
 - Substitute  `str` by `bytes`:
